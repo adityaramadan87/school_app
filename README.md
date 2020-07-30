@@ -1,6 +1,6 @@
 # school_app
 
-A new Flutter application.
+this app integrate with rest-api-golang in my repository
 
 ## Getting Started
 
