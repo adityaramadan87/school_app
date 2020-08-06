@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:school_app/api/intercept/ApiInterceptor.dart';
+import 'package:school_app/api/model/referalcode/ReferalCode.dart';
 import 'package:school_app/common/Constant.dart';
 
 class RestService {
@@ -19,5 +20,10 @@ class RestService {
   static void setInterceptors(Dio dio){
     dio.interceptors.clear();
     dio.interceptors.add(ApiInterceptor());
+  }
+
+  Future<ReferralCode> getReferalCode(String refCode) async {
+    Response response = await dio.get(Constant.BASE_URL + Constant.REFERAL_CODE + "/$refCode");
+    return ReferralCode.fromJson(response.data);
   }
 }

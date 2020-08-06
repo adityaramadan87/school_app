@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_app/route/Router.dart';
+import 'package:school_app/screen/CheckReferalCodeScreen.dart';
 import 'package:school_app/screen/LoginScreen.dart';
 import 'package:school_app/screen/SplashScreen.dart';
 
@@ -11,11 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      title: 'School App',
       home: SplashScreen(),
+      debugShowCheckedModeBanner: false,
       // ignore: missing_return
       onGenerateRoute: (RouteSettings routeSetting) {
         final args = routeSetting.arguments;
@@ -24,6 +23,11 @@ class MyApp extends StatelessWidget {
           case Constant.LOGIN_SCREEN:
             return Router(
               builder: (_) => LoginScreen(),
+              settings: routeSetting,
+            );
+          case Constant.REGISTER_SCREEN:
+            return Router(
+              builder: (_) => CheckReferalCodeScreen(),
               settings: routeSetting,
             );
         }
