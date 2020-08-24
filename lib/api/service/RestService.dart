@@ -22,8 +22,13 @@ class RestService {
     dio.interceptors.add(ApiInterceptor());
   }
 
-  Future<ReferralCode> getReferalCode(String refCode) async {
-    Response response = await dio.get(Constant.BASE_URL + Constant.REFERAL_CODE + "/$refCode");
-    return ReferralCode.fromJson(response.data);
+  Future<ReferalCode> getReferalCode(String refCode) async {
+    Response response = await dio.get(Constant.BASE_URL + Constant.REFERAL_CODE + "/$refCode",
+    options: Options(
+      validateStatus: (status) {
+        return status < 500;
+      },
+    ));
+    return ReferalCode.fromJson(response.data);
   }
 }

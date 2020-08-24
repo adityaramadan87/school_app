@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:school_app/common/Constant.dart';
 
 class ButtonPrimary extends StatelessWidget {
   final VoidCallback onPressed;
@@ -15,6 +16,7 @@ class ButtonPrimary extends StatelessWidget {
           color: this.textColor,
           fontSize: 20.0,
           fontWeight: FontWeight.w300,
+          fontFamily: Constant.MONTSERRAT,
           letterSpacing: 0.3,
         ),
       ),

@@ -5,11 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:school_app/api/base/ReturnedData.dart';
+import 'package:school_app/api/model/referalcode/ReferalCode.dart';
 import 'package:school_app/api/model/referalcode/ReferalCodeTask.dart';
+import 'package:school_app/common/Constant.dart';
+import 'package:school_app/common/SharedPrefencesKey.dart';
+import 'package:school_app/component/BadRequestView.dart';
 import 'package:school_app/component/ButtonPrimary.dart';
 import 'package:school_app/component/InputFieldArea.dart';
 import 'package:school_app/component/LoadingView.dart';
+import 'package:school_app/component/TimeoutView.dart';
+import 'package:school_app/helper/SharedPreferencesHelper.dart';
 import 'package:school_app/helper/SizeHelper.dart';
 
 class CheckReferalCodeScreen extends StatefulWidget {
@@ -23,6 +30,7 @@ class _CheckReferalCodeScreenState extends State<CheckReferalCodeScreen> with Re
 
   TextEditingController referalController;
   bool sLoading;
+  ProgressDialog pd;
 
 
   @override
@@ -35,27 +43,67 @@ class _CheckReferalCodeScreenState extends State<CheckReferalCodeScreen> with Re
   void init() {
     this.referalCodeTask = new ReferalCodeTask(this);
     this.referalController = new TextEditingController();
-    this.loading = false;
+    this.sLoading = false;
+    this.pd = ProgressDialog(
+        context ,
+        type: ProgressDialogType.Normal,
+        isDismissible: false,
+        customBody: LoadingView()
+    );
   }
 
   @override
-  void set loading(bool _loading) {
-    // TODO: implement loading
-    this.sLoading = _loading;
+  bool onLoading(bool isLoading) {
+    // TODO: implement onLoading
+    setState(() {
+      this.sLoading = isLoading;
+
+      if (isLoading){
+        pd.show();
+      }else{
+        pd.hide();
+      }
+    });
   }
 
   @override
   void onSuccess(Object data, {String flag}) {
     setState(() {
-//      this.loading = false;
+      if (data is ReferalCode){
+        ReferalCode referalCode = data;
+
+        if (referalCode.status == Constant.BAD_REQUEST) {
+          //show dialog dengan message dari referalCode.message
+          showDialog(
+            context: context,
+            builder: (ctx) => BadRequestView(message: referalCode.message,)
+          );
+        }else {
+          // Next kehalaman form register dan input
+          // referalCode.data.referalCode dan referalCode.data.muridId ke SharedPreferences
+          SharedPreferencesHelper preferencesHelper = new SharedPreferencesHelper();
+          preferencesHelper.put(SharedPreferencesKey.REFERAL_CODE, referalCode.data.referalCode);
+          preferencesHelper.put(SharedPreferencesKey.MURID_ID, referalCode.data.muridId);
+
+          Navigator.popAndPushNamed(context, Constant.REGISTER_SCREEN);
+
+        }
+
+      }
     });
   }
 
   @override
   void onError(String message) {
-    setState(() {
-//      this.loading = false;
-    });
+    if (message == Constant.CONNECTION_TIMEOUT){
+      showDialog(
+          context: context,
+          builder: (BuildContext ctx) => TimeoutView()
+      );
+    }else {
+      pd.hide();
+      print(message);
+    }
   }
 
 
@@ -90,6 +138,7 @@ class _CheckReferalCodeScreenState extends State<CheckReferalCodeScreen> with Re
                             child: Text(
                               "Please! \nInput Referral Code",
                               style: TextStyle(
+                                  fontFamily: Constant.POPPINS,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87,
                                   fontSize: 28
@@ -175,15 +224,10 @@ class _CheckReferalCodeScreenState extends State<CheckReferalCodeScreen> with Re
               ),
             ],
           ),
-          Visibility(
-            visible: this.loading,
-            child: Container(
-              width: SizeHelper.screenWidth,
-              height: SizeHelper.screenHeight,
-              color: Colors.white.withOpacity(0.8),
-              child: LoadingView(),
-            ),
-          )
+//          Visibility(
+//            visible: this.sLoading,
+//            child: LoadingView(),
+//          )
         ],
       )
     );

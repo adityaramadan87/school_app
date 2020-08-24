@@ -6,5 +6,7 @@ class ReturnedData {
 
   void onError(String message){}
 
-  bool loading = false;
+  bool onLoading(bool isLoading){
+    return isLoading;
+  }
 }

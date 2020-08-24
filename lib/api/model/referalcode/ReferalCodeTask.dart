@@ -1,5 +1,6 @@
 import 'package:school_app/api/base/ReturnedData.dart';
 import 'package:school_app/api/service/RestService.dart';
+import 'package:school_app/common/Constant.dart';
 
 class ReferalCodeTask {
 
@@ -9,23 +10,24 @@ class ReferalCodeTask {
   RestService restService = new RestService();
 
   fetch(String refCode) async {
-    returnedData.loading = true;
+    returnedData.onLoading(true);
 
     restService.getReferalCode(refCode).then((response) {
       if (response != null){
-        returnedData.loading = false;
+        returnedData.onLoading(false);
         returnedData.onSuccess(response);
       }else {
-        returnedData.loading = false;
+        returnedData.onLoading(false);
         returnedData.onError("Null Data");
       }
     }).catchError((error) {
-      returnedData.loading = false;
+      returnedData.onLoading(false);
       returnedData.onError(error.toString());
     }).timeout(Duration(seconds: 15), onTimeout: () {
-      returnedData.loading = false;
-      returnedData.onError("Connection Timeout");
+      returnedData.onLoading(false);
+      returnedData.onError(Constant.CONNECTION_TIMEOUT);
     });
+
   }
 
 }

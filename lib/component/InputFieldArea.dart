@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:school_app/common/Constant.dart';
 
 class InputFieldArea extends StatelessWidget {
   final String hint;
@@ -31,6 +32,7 @@ class InputFieldArea extends StatelessWidget {
         obscureText: obscure,
         style: TextStyle(
           color: this.textColor,
+          fontFamily: Constant.POPPINS
         ),
         decoration: new InputDecoration(
           enabledBorder: UnderlineInputBorder(

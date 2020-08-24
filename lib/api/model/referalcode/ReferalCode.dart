@@ -1,13 +1,12 @@
+import 'package:school_app/api/base/BaseModel.dart';
 import 'package:school_app/api/model/referalcode/Data.dart';
 
-class ReferralCode {
-  int status;
-  String message;
+class ReferalCode extends BaseModel{
   Data data;
 
-  ReferralCode({this.status, this.message, this.data});
+  ReferalCode({status, message, this.data});
 
-  ReferralCode.fromJson(Map<String, dynamic> json) {
+  ReferalCode.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;

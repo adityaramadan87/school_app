@@ -10,7 +10,12 @@ class Router<T> extends MaterialPageRoute<T> {
     if (settings.isInitialRoute){
       return child;
     }
-    return new FadeTransition(opacity: animation, child: child,);
+    return new SlideTransition(
+      position: Tween(
+          begin: Offset(1.0, 0.0),
+          end: Offset(0.0,0.0)).animate(animation),
+      child: child,
+    );
   }
   
 }
